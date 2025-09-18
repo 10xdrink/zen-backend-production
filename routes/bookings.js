@@ -17,7 +17,7 @@ const router = express.Router();
 
 // Get user bookings
 router.get('/my-bookings', protect, [
-  query('status').optional().isIn(['pending', 'confirmed', 'in-progress', 'completed', 'cancelled', 'rescheduled']),
+  query('status').optional().isIn(['confirmed', 'in-progress', 'completed', 'cancelled', 'rescheduled', 'no-show']),
   query('upcoming').optional().isBoolean(),
   query('limit').optional().isInt({ min: 1, max: 50 }),
   query('page').optional().isInt({ min: 1 })
@@ -291,7 +291,7 @@ router.post('/', protect, [
 
 // Update booking status
 router.patch('/:id/status', protect, [
-  body('status').isIn(['pending', 'confirmed', 'in-progress', 'completed', 'cancelled', 'rescheduled']).withMessage('Invalid status'),
+  body('status').isIn(['confirmed', 'in-progress', 'completed', 'cancelled', 'rescheduled', 'no-show']).withMessage('Invalid status'),
   body('cancellationReason').optional().isLength({ min: 5, max: 500 }).withMessage('Cancellation reason must be between 5-500 characters')
 ], async (req, res) => {
   try {
@@ -560,7 +560,7 @@ router.get('/availability/calendar/:year/:month', [
         $lte: endDate
       },
       location,
-      status: { $in: ['pending', 'confirmed', 'in-progress'] }
+      status: { $in: ['confirmed', 'in-progress'] }
     }).select('appointmentDate appointmentTime treatmentDetails.duration');
 
     // Generate time slots for reference (1-hour intervals from 10 AM to 7 PM)
@@ -678,7 +678,7 @@ router.get('/availability/:date', [
         $lt: new Date(appointmentDate.setHours(23, 59, 59, 999))
       },
       location,
-      status: { $in: ['pending', 'confirmed', 'in-progress'] }
+      status: { $in: ['confirmed', 'in-progress'] }
     }).select('appointmentTime treatmentDetails.duration');
 
     // Generate available time slots (10 AM to 7 PM, 1-hour intervals)
@@ -773,7 +773,7 @@ router.put('/:id/cancel', protect, async (req, res) => {
     }
 
     // Check if booking can be cancelled
-    if (!['pending', 'confirmed', 'rescheduled'].includes(booking.status)) {
+    if (!['confirmed', 'rescheduled'].includes(booking.status)) {
       return res.status(400).json({
         success: false,
         message: 'This booking cannot be cancelled'
@@ -1189,7 +1189,7 @@ router.post('/:id/checkout', protect, [
 
 // Get all bookings for admin (for admin panel)
 router.get('/admin/all-bookings', protect, [
-  query('status').optional().isIn(['pending', 'confirmed', 'in-progress', 'completed', 'cancelled', 'rescheduled']),
+  query('status').optional().isIn(['confirmed', 'in-progress', 'completed', 'cancelled', 'rescheduled', 'no-show']),
   query('location').optional().isIn(['Jubilee Hills', 'Kokapet', 'Kondapur']),
   query('date').optional().isISO8601(),
   query('limit').optional().isInt({ min: 1, max: 100 }),
@@ -1383,6 +1383,38 @@ router.post('/mark-no-shows', protect, async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Failed to mark no-show appointments',
+      error: error.message
+    });
+  }
+});
+
+// Auto mark no-shows endpoint (can be called without authentication for cron jobs)
+router.post('/auto-mark-no-shows', async (req, res) => {
+  try {
+    // Add a simple API key check for security
+    const apiKey = req.headers['x-api-key'];
+    if (apiKey !== process.env.CRON_API_KEY && process.env.NODE_ENV === 'production') {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized'
+      });
+    }
+
+    const result = await Booking.markNoShowAppointments();
+    
+    console.log(`Auto no-show check: Marked ${result.modifiedCount} appointments as no-show at ${new Date().toISOString()}`);
+    
+    res.json({
+      success: true,
+      message: `Auto-marked ${result.modifiedCount} appointments as no-show`,
+      modifiedCount: result.modifiedCount,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Auto mark no-shows error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to auto-mark no-show appointments',
       error: error.message
     });
   }

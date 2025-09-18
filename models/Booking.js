@@ -322,23 +322,37 @@ bookingSchema.methods.markAsNoShow = function() {
 };
 
 // Static method to find and mark no-show appointments
-bookingSchema.statics.markNoShowAppointments = function() {
+bookingSchema.statics.markNoShowAppointments = async function() {
   const now = new Date();
-  const cutoffTime = new Date(now.getTime() - 30 * 60 * 1000); // 30 minutes after appointment time
   
-  return this.updateMany(
-    {
-      status: 'confirmed',
-      appointmentDate: { $lt: cutoffTime },
-      checkedIn: { $ne: true }
-    },
-    {
-      $set: {
-        status: 'no-show',
-        noShowMarkedAt: now
-      }
+  // Find all confirmed bookings that haven't checked in
+  const bookings = await this.find({
+    status: 'confirmed',
+    checkedIn: { $ne: true }
+  });
+  
+  let updatedCount = 0;
+  
+  // Check each booking to see if it's past the 1-hour no-show window
+  for (const booking of bookings) {
+    // Create appointment datetime by combining date and time
+    const appointmentDate = new Date(booking.appointmentDate);
+    const [hours, minutes] = booking.appointmentTime.split(':');
+    const appointmentDateTime = new Date(appointmentDate);
+    appointmentDateTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+    
+    // Check if 1 hour has passed since appointment time
+    const oneHourAfterAppointment = new Date(appointmentDateTime.getTime() + 60 * 60 * 1000);
+    
+    if (now > oneHourAfterAppointment) {
+      booking.status = 'no-show';
+      booking.noShowMarkedAt = now;
+      await booking.save();
+      updatedCount++;
     }
-  );
+  }
+  
+  return { modifiedCount: updatedCount };
 };
 
 // Instance method to add rating and feedback
