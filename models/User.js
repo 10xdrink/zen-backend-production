@@ -85,6 +85,47 @@ const userSchema = new mongoose.Schema({
       default: 0
     }
   },
+  // User Plan Type
+  planType: {
+    type: String,
+    enum: ['standard', 'zen_member'],
+    default: 'standard'
+  },
+  // Zen Membership
+  hasZenMembership: {
+    type: Boolean,
+    default: false
+  },
+  zenMembershipPurchaseDate: {
+    type: Date,
+    default: null
+  },
+  zenMembershipTransactionId: {
+    type: String,
+    default: null
+  },
+  zenMembershipExpiryDate: {
+    type: Date,
+    default: null
+  },
+  // Admin tracking fields
+  registrationSource: {
+    type: String,
+    enum: ['mobile_app', 'web', 'admin_created'],
+    default: 'mobile_app'
+  },
+  totalBookings: {
+    type: Number,
+    default: 0
+  },
+  totalSpent: {
+    type: Number,
+    default: 0
+  },
+  lastBookingDate: {
+    type: Date,
+    default: null
+  },
   // Saved addresses for delivery
   savedAddresses: [{
     label: {
@@ -196,6 +237,32 @@ userSchema.methods.verifyOTP = function(candidateOTP, type = 'email') {
   return { success: true, message: 'OTP verified successfully' };
 };
 
+// Instance method to upgrade to Zen membership
+userSchema.methods.upgradeToZenMembership = function(transactionId) {
+  this.planType = 'zen_member';
+  this.hasZenMembership = true;
+  this.zenMembershipPurchaseDate = new Date();
+  this.zenMembershipTransactionId = transactionId;
+  // Zen membership is lifetime, so no expiry date
+  this.zenMembershipExpiryDate = null;
+  return this.save();
+};
+
+// Instance method to check if user has active zen membership
+userSchema.methods.hasActiveZenMembership = function() {
+  return this.hasZenMembership && this.planType === 'zen_member';
+};
+
+// Instance method to get user plan details
+userSchema.methods.getPlanDetails = function() {
+  return {
+    planType: this.planType,
+    hasZenMembership: this.hasZenMembership,
+    zenMembershipPurchaseDate: this.zenMembershipPurchaseDate,
+    isLifetimeMember: this.hasZenMembership && !this.zenMembershipExpiryDate
+  };
+};
+
 // Static method to find user by email or phone
 userSchema.statics.findByEmailOrPhone = function(identifier) {
   return this.findOne({
@@ -204,6 +271,96 @@ userSchema.statics.findByEmailOrPhone = function(identifier) {
       { phoneNumber: identifier }
     ]
   });
+};
+
+// Instance method to calculate total spent from completed bookings and delivered orders
+userSchema.methods.calculateTotalSpent = async function() {
+  const Booking = require('./Booking');
+  const MedicineOrder = require('./MedicineOrder');
+  
+  // Calculate total from completed appointments with paid status
+  const completedBookings = await Booking.aggregate([
+    {
+      $match: {
+        user: this._id,
+        status: 'completed',
+        paymentStatus: 'paid'
+      }
+    },
+    {
+      $group: {
+        _id: null,
+        total: { $sum: '$totalAmount' }
+      }
+    }
+  ]);
+
+  // Calculate total from delivered medicine orders
+  const deliveredOrders = await MedicineOrder.aggregate([
+    {
+      $match: {
+        userId: this._id,
+        orderStatus: 'delivered'
+      }
+    },
+    {
+      $group: {
+        _id: null,
+        total: { $sum: '$orderSummary.totalAmount' }
+      }
+    }
+  ]);
+
+  const bookingsTotal = completedBookings.length > 0 ? completedBookings[0].total : 0;
+  const ordersTotal = deliveredOrders.length > 0 ? deliveredOrders[0].total : 0;
+  
+  return bookingsTotal + ordersTotal;
+};
+
+// Static method to get user statistics for admin
+userSchema.statics.getUserStats = function() {
+  return this.aggregate([
+    {
+      $group: {
+        _id: null,
+        totalUsers: { $sum: 1 },
+        standardUsers: {
+          $sum: { 
+            $cond: [
+              { 
+                $and: [
+                  { $eq: ['$planType', 'standard'] },
+                  { $ne: ['$hasZenMembership', true] }
+                ]
+              }, 
+              1, 
+              0
+            ] 
+          }
+        },
+        zenMembers: {
+          $sum: { 
+            $cond: [
+              { 
+                $or: [
+                  { $eq: ['$planType', 'zen_member'] },
+                  { $eq: ['$hasZenMembership', true] }
+                ]
+              }, 
+              1, 
+              0
+            ] 
+          }
+        },
+        activeUsers: {
+          $sum: { $cond: ['$isActive', 1, 0] }
+        },
+        verifiedUsers: {
+          $sum: { $cond: [{ $and: ['$isEmailVerified', '$isPhoneVerified'] }, 1, 0] }
+        }
+      }
+    }
+  ]);
 };
 
 module.exports = mongoose.model('User', userSchema);

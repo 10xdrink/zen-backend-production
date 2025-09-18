@@ -144,7 +144,8 @@ router.post('/verify-otp', [
           phoneNumber: user.phoneNumber,
           location: user.location,
           isEmailVerified: user.isEmailVerified,
-          isPhoneVerified: user.isPhoneVerified
+          isPhoneVerified: user.isPhoneVerified,
+          hasZenMembership: user.hasZenMembership || false
         }
       }
     });

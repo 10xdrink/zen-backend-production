@@ -701,9 +701,16 @@ router.get('/availability/:date', [
       let isPastTime = false;
       if (isToday) {
         const slotHour = parseInt(slot.split(':')[0]);
-        // Consider a slot as past if it's the current hour or earlier
-        // Add 1 hour buffer for booking preparation
-        isPastTime = slotHour <= (currentHour + 1);
+        const slotMinute = parseInt(slot.split(':')[1]);
+        
+        // Create a proper time comparison
+        const slotTime = new Date(today);
+        slotTime.setHours(slotHour, slotMinute, 0, 0);
+        
+        // Consider a slot as past if current time is past the slot time
+        // Add 30 minutes buffer for booking preparation
+        const bufferTime = new Date(slotTime.getTime() + 30 * 60 * 1000);
+        isPastTime = today >= bufferTime;
       }
       
       const isAvailable = !isBooked && !isPastTime;
@@ -766,7 +773,7 @@ router.put('/:id/cancel', protect, async (req, res) => {
     }
 
     // Check if booking can be cancelled
-    if (!['pending', 'confirmed'].includes(booking.status)) {
+    if (!['pending', 'confirmed', 'rescheduled'].includes(booking.status)) {
       return res.status(400).json({
         success: false,
         message: 'This booking cannot be cancelled'
@@ -1513,6 +1520,15 @@ router.patch('/admin/:id/status', [
         });
       }
       await booking.cancelBooking(cancellationReason);
+      
+      // Send cancellation email (best-effort)
+      try {
+        await sendAppointmentCancelledEmail(booking.personalDetails.email, booking);
+        console.log(`Admin cancellation email sent to ${booking.personalDetails.email} for ${booking.bookingReference}`);
+      } catch (emailError) {
+        console.error('Failed to send admin cancellation email:', emailError);
+        // Do not block status update on email failure
+      }
     } else if (status === 'no-show') {
       await booking.markAsNoShow();
     } else if (status === 'completed') {
@@ -1571,6 +1587,14 @@ router.patch('/admin/bulk-update', [
         switch (action) {
           case 'cancel':
             await booking.cancelBooking(data?.cancellationReason || 'Cancelled by admin');
+            
+            // Send cancellation email (best-effort)
+            try {
+              await sendAppointmentCancelledEmail(booking.personalDetails.email, booking);
+              console.log(`Admin bulk cancellation email sent to ${booking.personalDetails.email} for ${booking.bookingReference}`);
+            } catch (emailError) {
+              console.error('Failed to send admin bulk cancellation email:', emailError);
+            }
             break;
           case 'confirm':
             booking.status = 'confirmed';
@@ -1593,7 +1617,17 @@ router.patch('/admin/bulk-update', [
             }
             
             if (data?.appointmentDate && data?.appointmentTime) {
+              // Capture old booking details for email
+              const oldBooking = booking.toObject();
               await booking.rescheduleBooking(data.appointmentDate, data.appointmentTime);
+              
+              // Send reschedule email (best-effort)
+              try {
+                await sendAppointmentRescheduledEmail(booking.personalDetails.email, oldBooking, booking);
+                console.log(`Admin bulk reschedule email sent to ${booking.personalDetails.email} for ${booking.bookingReference}`);
+              } catch (emailError) {
+                console.error('Failed to send admin bulk reschedule email:', emailError);
+              }
             } else {
               results.push({ bookingId, success: false, message: 'Date and time required for reschedule' });
               continue;
@@ -1618,6 +1652,72 @@ router.patch('/admin/bulk-update', [
     res.status(500).json({
       success: false,
       message: 'Failed to perform bulk operation',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+});
+
+// Get available time slots for admin (filtered by current time)
+router.get('/admin/available-slots/:date', async (req, res) => {
+  try {
+    const { date } = req.params;
+    
+    // Validate date format
+    const appointmentDate = new Date(date);
+    if (isNaN(appointmentDate.getTime())) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid date format'
+      });
+    }
+
+    // Generate all possible time slots (10 AM to 7 PM)
+    const allTimeSlots = [];
+    for (let hour = 10; hour <= 19; hour++) {
+      const timeString = `${hour.toString().padStart(2, '0')}:00`;
+      allTimeSlots.push(timeString);
+    }
+
+    // Check if this is today's date
+    const today = new Date();
+    const isToday = appointmentDate.toDateString() === today.toDateString();
+    
+    // Filter slots based on current time if it's today
+    let availableSlots = allTimeSlots;
+    if (isToday) {
+      availableSlots = allTimeSlots.filter(slot => {
+        const slotHour = parseInt(slot.split(':')[0]);
+        const slotMinute = parseInt(slot.split(':')[1]);
+        
+        // Create proper time comparison
+        const slotTime = new Date(today);
+        slotTime.setHours(slotHour, slotMinute, 0, 0);
+        
+        // Add 30 minutes buffer for booking preparation
+        const bufferTime = new Date(slotTime.getTime() + 30 * 60 * 1000);
+        return today < bufferTime;
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Available time slots retrieved successfully',
+      data: {
+        date,
+        availableSlots,
+        isToday,
+        currentTime: today.toLocaleTimeString('en-US', { 
+          hour12: false, 
+          timeZone: 'Asia/Kolkata' 
+        })
+      }
+    });
+
+  } catch (error) {
+    console.error('Get admin available slots error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to retrieve available slots',
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
