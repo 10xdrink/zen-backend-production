@@ -125,7 +125,7 @@ const medicineOrderSchema = new mongoose.Schema({
   },
   location: {
     type: String,
-    enum: ['Jubilee Hills', 'Kokapet', 'Kondapur'],
+    enum: ['Jubilee Hills', 'Financial District', 'Kondapur'],
     required: true
   },
   notes: String,

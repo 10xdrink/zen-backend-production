@@ -9,10 +9,10 @@ const router = express.Router();
 router.get('/', [
   query('category').optional().isIn(['All', 'Skin', 'Facials', 'Aesthetics', 'Hair', 'Peels', 'Men', 'Wellness']),
   query('search').optional().isLength({ min: 1, max: 100 }),
-  query('location').optional().isIn(['Jubilee Hills', 'Kokapet', 'Kondapur']),
+  query('location').optional().isIn(['Jubilee Hills', 'Financial District', 'Kondapur']),
   query('limit').optional().isInt({ min: 1, max: 100 }),
   query('page').optional().isInt({ min: 1 }),
-  query('sort').optional().isIn(['name', 'price', 'rating', 'popular'])
+  query('sort').optional().isIn(['name', 'rating', 'popular'])
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -55,9 +55,6 @@ router.get('/', [
     switch (sort) {
       case 'name':
         sortOptions = { name: 1 };
-        break;
-      case 'price':
-        sortOptions = { price: 1 };
         break;
       case 'rating':
         sortOptions = { rating: -1, ratingCount: -1 };
@@ -333,8 +330,6 @@ router.post('/', protect, [
   body('category').isIn(['Skin', 'Facials', 'Aesthetics', 'Hair', 'Peels', 'Men', 'Wellness']).withMessage('Invalid category'),
   body('description').trim().isLength({ min: 10, max: 500 }).withMessage('Description must be between 10-500 characters'),
   body('fullDescription').trim().isLength({ min: 50, max: 2000 }).withMessage('Full description must be between 50-2000 characters'),
-  body('price').isFloat({ min: 0 }).withMessage('Price must be a positive number'),
-  body('priceDisplay').trim().notEmpty().withMessage('Price display is required'),
   body('duration').isInt({ min: 15 }).withMessage('Duration must be at least 15 minutes'),
   body('durationDisplay').trim().notEmpty().withMessage('Duration display is required'),
   body('image').isURL().withMessage('Image must be a valid URL'),
@@ -388,7 +383,6 @@ router.put('/:id', protect, [
   body('category').optional().isIn(['Skin', 'Facials', 'Aesthetics', 'Hair', 'Peels', 'Men', 'Wellness']),
   body('description').optional().trim().isLength({ min: 10, max: 500 }),
   body('fullDescription').optional().trim().isLength({ min: 50, max: 2000 }),
-  body('price').optional().isFloat({ min: 0 }),
   body('duration').optional().isInt({ min: 15 }),
   body('image').optional().isURL()
 ], async (req, res) => {

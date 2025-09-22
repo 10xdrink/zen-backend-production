@@ -9,8 +9,6 @@ const treatmentsData = [
     category: 'Facials',
     description: 'Deep cleansing and hydrating facial treatment',
     fullDescription: 'HydraFacial is a non-invasive, multi-step treatment that combines the benefits of next-level hydradermabrasion, a chemical peel, automated painless extractions (no pinching!) and a special delivery of Antioxidants, Hyaluronic Acid and Peptides. It does all of this in one quick treatment that delivers real results without downtime or irritation.',
-    price: 3500,
-    priceDisplay: '₹3,500',
     duration: 60,
     durationDisplay: '60 mins',
     image: 'https://images.pexels.com/photos/3985360/pexels-photo-3985360.jpeg',
@@ -29,7 +27,7 @@ const treatmentsData = [
     ratingCount: 342,
     isActive: true,
     isPopular: true,
-    availableLocations: ['Jubilee Hills', 'Kokapet', 'Kondapur'],
+    availableLocations: ['Jubilee Hills', 'Financial District', 'Kondapur'],
     tags: ['hydrating', 'anti-aging', 'deep-cleansing', 'non-invasive']
   },
   {
@@ -37,8 +35,6 @@ const treatmentsData = [
     category: 'Aesthetics',
     description: 'Anti-aging injectable treatment',
     fullDescription: 'Botox is a purified protein that temporarily relaxes facial muscles to smooth out wrinkles and fine lines. It\'s most commonly used to treat crow\'s feet, forehead lines, and frown lines between the eyebrows.',
-    price: 8000,
-    priceDisplay: '₹8,000',
     duration: 30,
     durationDisplay: '30 mins',
     image: 'https://images.pexels.com/photos/3997993/pexels-photo-3997993.jpeg',
@@ -57,7 +53,7 @@ const treatmentsData = [
     ratingCount: 189,
     isActive: true,
     isPopular: true,
-    availableLocations: ['Jubilee Hills', 'Kokapet', 'Kondapur'],
+    availableLocations: ['Jubilee Hills', 'Financial District', 'Kondapur'],
     tags: ['anti-aging', 'injectable', 'wrinkle-reduction', 'botox']
   },
   {
@@ -65,8 +61,6 @@ const treatmentsData = [
     category: 'Peels',
     description: 'Exfoliating treatment for smoother skin',
     fullDescription: 'Chemical peels use a chemical solution to remove the damaged outer layers of skin. This treatment helps improve the appearance of fine lines, acne scars, uneven skin tone, and sun damage.',
-    price: 2500,
-    priceDisplay: '₹2,500',
     duration: 45,
     durationDisplay: '45 mins',
     image: 'https://images.pexels.com/photos/3985254/pexels-photo-3985254.jpeg',
@@ -85,7 +79,7 @@ const treatmentsData = [
     ratingCount: 256,
     isActive: true,
     isPopular: true,
-    availableLocations: ['Jubilee Hills', 'Kokapet', 'Kondapur'],
+    availableLocations: ['Jubilee Hills', 'Financial District', 'Kondapur'],
     tags: ['exfoliating', 'acne-treatment', 'skin-renewal', 'chemical-peel']
   },
   {
@@ -93,8 +87,6 @@ const treatmentsData = [
     category: 'Hair',
     description: 'Professional hair restoration consultation',
     fullDescription: 'Comprehensive consultation with our hair restoration specialists to assess your hair loss pattern, discuss treatment options, and create a personalized hair restoration plan.',
-    price: 1000,
-    priceDisplay: '₹1,000',
     duration: 30,
     durationDisplay: '30 mins',
     image: 'https://images.pexels.com/photos/3993449/pexels-photo-3993449.jpeg',
@@ -113,7 +105,7 @@ const treatmentsData = [
     ratingCount: 124,
     isActive: true,
     isPopular: false,
-    availableLocations: ['Jubilee Hills', 'Kokapet', 'Kondapur'],
+    availableLocations: ['Jubilee Hills', 'Financial District', 'Kondapur'],
     tags: ['hair-restoration', 'consultation', 'hair-loss', 'assessment']
   },
   {
@@ -121,8 +113,6 @@ const treatmentsData = [
     category: 'Skin',
     description: 'Specialized treatment for acne-prone skin',
     fullDescription: 'Comprehensive acne treatment program that includes deep cleansing, extraction, anti-bacterial treatment, and customized skincare regimen to control breakouts and prevent future acne.',
-    price: 4000,
-    priceDisplay: '₹4,000',
     duration: 75,
     durationDisplay: '75 mins',
     image: 'https://images.pexels.com/photos/3985327/pexels-photo-3985327.jpeg',
@@ -141,7 +131,7 @@ const treatmentsData = [
     ratingCount: 218,
     isActive: true,
     isPopular: true,
-    availableLocations: ['Jubilee Hills', 'Kokapet', 'Kondapur'],
+    availableLocations: ['Jubilee Hills', 'Financial District', 'Kondapur'],
     tags: ['acne-treatment', 'skin-care', 'oil-control', 'breakout-control']
   },
   {
@@ -149,8 +139,6 @@ const treatmentsData = [
     category: 'Men',
     description: 'Complete grooming package for men',
     fullDescription: 'Comprehensive grooming package designed specifically for men, including facial cleansing, beard grooming, eyebrow shaping, and skincare consultation tailored to men\'s skin needs.',
-    price: 3000,
-    priceDisplay: '₹3,000',
     duration: 90,
     durationDisplay: '90 mins',
     image: 'https://images.pexels.com/photos/3992656/pexels-photo-3992656.jpeg',
@@ -169,7 +157,7 @@ const treatmentsData = [
     ratingCount: 156,
     isActive: true,
     isPopular: false,
-    availableLocations: ['Jubilee Hills', 'Kokapet', 'Kondapur'],
+    availableLocations: ['Jubilee Hills', 'Financial District', 'Kondapur'],
     tags: ['mens-grooming', 'beard-care', 'facial', 'skincare']
   },
   // Additional treatments to match frontend categories
@@ -178,8 +166,6 @@ const treatmentsData = [
     category: 'Facials',
     description: 'Traditional facial treatment for all skin types',
     fullDescription: 'A classic facial treatment that includes cleansing, exfoliation, steam, extractions, and a customized mask to leave your skin refreshed and glowing.',
-    price: 2000,
-    priceDisplay: '₹2,000',
     duration: 60,
     durationDisplay: '60 mins',
     image: 'https://images.pexels.com/photos/3985360/pexels-photo-3985360.jpeg',
@@ -197,7 +183,7 @@ const treatmentsData = [
     ratingCount: 89,
     isActive: true,
     isPopular: false,
-    availableLocations: ['Jubilee Hills', 'Kokapet', 'Kondapur'],
+    availableLocations: ['Jubilee Hills', 'Financial District', 'Kondapur'],
     tags: ['classic-facial', 'cleansing', 'relaxing', 'all-skin-types']
   },
   {
@@ -205,8 +191,6 @@ const treatmentsData = [
     category: 'Hair',
     description: 'Platelet-rich plasma therapy for hair growth',
     fullDescription: 'PRP (Platelet-Rich Plasma) therapy uses your own blood platelets to stimulate hair growth and improve hair thickness. This natural treatment is effective for both men and women experiencing hair loss.',
-    price: 6000,
-    priceDisplay: '₹6,000',
     duration: 90,
     durationDisplay: '90 mins',
     image: 'https://images.pexels.com/photos/3993449/pexels-photo-3993449.jpeg',
@@ -224,7 +208,7 @@ const treatmentsData = [
     ratingCount: 78,
     isActive: true,
     isPopular: true,
-    availableLocations: ['Jubilee Hills', 'Kokapet', 'Kondapur'],
+    availableLocations: ['Jubilee Hills', 'Financial District', 'Kondapur'],
     tags: ['prp-therapy', 'hair-growth', 'natural-treatment', 'hair-loss']
   },
   {
@@ -232,8 +216,6 @@ const treatmentsData = [
     category: 'Wellness',
     description: 'Relaxing therapy to reduce stress and tension',
     fullDescription: 'A comprehensive stress relief therapy combining aromatherapy, gentle massage, and relaxation techniques to help you unwind and rejuvenate both body and mind.',
-    price: 3500,
-    priceDisplay: '₹3,500',
     duration: 75,
     durationDisplay: '75 mins',
     image: 'https://images.pexels.com/photos/3985360/pexels-photo-3985360.jpeg',
@@ -251,7 +233,7 @@ const treatmentsData = [
     ratingCount: 134,
     isActive: true,
     isPopular: true,
-    availableLocations: ['Jubilee Hills', 'Kokapet', 'Kondapur'],
+    availableLocations: ['Jubilee Hills', 'Financial District', 'Kondapur'],
     tags: ['stress-relief', 'relaxation', 'wellness', 'aromatherapy']
   },
   {
@@ -259,8 +241,6 @@ const treatmentsData = [
     category: 'Aesthetics',
     description: 'Permanent hair reduction using laser technology',
     fullDescription: 'Advanced laser hair removal treatment that targets hair follicles to provide long-lasting hair reduction. Safe and effective for all skin types.',
-    price: 5000,
-    priceDisplay: '₹5,000',
     duration: 45,
     durationDisplay: '45 mins',
     image: 'https://images.pexels.com/photos/3997993/pexels-photo-3997993.jpeg',
@@ -278,7 +258,7 @@ const treatmentsData = [
     ratingCount: 167,
     isActive: true,
     isPopular: true,
-    availableLocations: ['Jubilee Hills', 'Kokapet', 'Kondapur'],
+    availableLocations: ['Jubilee Hills', 'Financial District', 'Kondapur'],
     tags: ['laser-hair-removal', 'permanent', 'hair-reduction', 'aesthetics']
   }
 ];

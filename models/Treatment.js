@@ -25,15 +25,6 @@ const treatmentSchema = new mongoose.Schema({
     trim: true,
     maxlength: [2000, 'Full description cannot exceed 2000 characters']
   },
-  price: {
-    type: Number,
-    required: [true, 'Treatment price is required'],
-    min: [0, 'Price cannot be negative']
-  },
-  priceDisplay: {
-    type: String,
-    required: [true, 'Price display format is required']
-  },
   duration: {
     type: Number, // Duration in minutes
     required: [true, 'Treatment duration is required'],
@@ -105,7 +96,7 @@ const treatmentSchema = new mongoose.Schema({
   },
   availableLocations: [{
     type: String,
-    enum: ['Jubilee Hills', 'Kokapet', 'Kondapur']
+    enum: ['Jubilee Hills', 'Financial District', 'Kondapur']
   }],
   // SEO and metadata
   slug: {

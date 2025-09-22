@@ -432,8 +432,8 @@ router.get('/customers', adminProtect, async (req, res) => {
 // Get customer statistics
 router.get('/customers/stats', adminProtect, async (req, res) => {
   try {
-    // Get basic user stats
-    const userStats = await User.getUserStats();
+    // Get total users count
+    const totalUsers = await User.countDocuments({});
     
     // Get accurate zen membership count from ZenMembership collection
     const activeZenMemberships = await ZenMembership.countDocuments({
@@ -441,13 +441,18 @@ router.get('/customers/stats', adminProtect, async (req, res) => {
       status: 'active'
     });
     
-    // Get total users count
-    const totalUsers = await User.countDocuments({});
+    // Get zen member user IDs to properly calculate standard users
+    const zenMemberUserIds = await ZenMembership.find({
+      isActive: true,
+      status: 'active'
+    }).distinct('userId');
     
-    // Calculate standard users (total - zen members)
-    const standardUsers = totalUsers - activeZenMemberships;
+    // Calculate standard users (users who are NOT zen members)
+    const standardUsers = await User.countDocuments({
+      _id: { $nin: zenMemberUserIds }
+    });
     
-    // Get active users count
+    // Get active users count (users who are currently active)
     const activeUsers = await User.countDocuments({ isActive: true });
     
     // Get verified users count
@@ -473,13 +478,20 @@ router.get('/customers/stats', adminProtect, async (req, res) => {
     // Create accurate overview stats
     const overview = {
       totalUsers,
-      standardUsers: Math.max(0, standardUsers), // Ensure non-negative
+      standardUsers,
       zenMembers: activeZenMemberships,
       activeUsers,
       verifiedUsers
     };
 
-    console.log('Customer statistics calculated:', overview);
+    console.log('Customer statistics calculated:', {
+      totalUsers,
+      standardUsers,
+      zenMembers: activeZenMemberships,
+      activeUsers,
+      verifiedUsers,
+      zenMemberUserIds: zenMemberUserIds.length
+    });
 
     res.status(200).json({
       success: true,
@@ -566,7 +578,7 @@ router.post('/customers', [
   body('phoneNumber').matches(/^[\+]?[1-9][\d]{0,15}$/).withMessage('Please provide a valid phone number'),
   body('dateOfBirth').isISO8601().withMessage('Please provide a valid date of birth'),
   body('gender').isIn(['Male', 'Female', 'Other']).withMessage('Gender must be Male, Female, or Other'),
-  body('location').isIn(['Jubilee Hills', 'Kokapet', 'Kondapur']).withMessage('Location must be one of the available locations'),
+  body('location').isIn(['Jubilee Hills', 'Financial District', 'Kondapur']).withMessage('Location must be one of the available locations'),
   body('planType').optional().isIn(['standard', 'zen_member']).withMessage('Plan type must be standard or zen_member')
 ], async (req, res) => {
   try {
@@ -666,7 +678,7 @@ router.put('/customers/:id', [
   body('phoneNumber').optional().matches(/^[\+]?[1-9][\d]{0,15}$/).withMessage('Please provide a valid phone number'),
   body('dateOfBirth').optional().isISO8601().withMessage('Please provide a valid date of birth'),
   body('gender').optional().isIn(['Male', 'Female', 'Other']).withMessage('Gender must be Male, Female, or Other'),
-  body('location').optional().isIn(['Jubilee Hills', 'Kokapet', 'Kondapur']).withMessage('Location must be one of the available locations'),
+  body('location').optional().isIn(['Jubilee Hills', 'Financial District', 'Kondapur']).withMessage('Location must be one of the available locations'),
   body('planType').optional().isIn(['standard', 'zen_member']).withMessage('Plan type must be standard or zen_member'),
   body('isActive').optional().isBoolean().withMessage('isActive must be a boolean')
 ], async (req, res) => {

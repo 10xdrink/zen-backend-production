@@ -159,9 +159,9 @@ router.post('/', protect, [
   body('personalDetails.fullName').trim().isLength({ min: 2, max: 50 }).withMessage('Full name must be between 2-50 characters'),
   body('personalDetails.mobileNumber').matches(/^[\+]?[1-9][\d]{0,15}$/).withMessage('Please provide a valid mobile number'),
   body('personalDetails.email').isEmail().normalizeEmail().withMessage('Please provide a valid email'),
-  body('location').isIn(['Jubilee Hills', 'Kokapet', 'Kondapur']).withMessage('Please select a valid location'),
+  body('location').isIn(['Jubilee Hills', 'Financial District', 'Kondapur']).withMessage('Please select a valid location'),
   body('appointmentDate').isISO8601().withMessage('Please provide a valid appointment date'),
-  body('appointmentTime').matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).withMessage('Please provide a valid appointment time (HH:MM format)'),
+  body('appointmentTime').isIn(['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00']).withMessage('Please select a valid appointment time slot'),
   body('specialRequests').optional().isLength({ max: 500 }).withMessage('Special requests cannot exceed 500 characters'),
   body('paymentMethod').optional().isIn(['cash', 'card', 'upi', 'wallet']).withMessage('Please provide a valid payment method')
 ], async (req, res) => {
@@ -244,15 +244,12 @@ router.post('/', protect, [
       treatmentDetails: {
         name: treatment.name,
         category: treatment.category,
-        price: treatment.price,
-        priceDisplay: treatment.priceDisplay,
         duration: treatment.duration,
         durationDisplay: treatment.durationDisplay
       },
       location,
       appointmentDate: appointmentDateTime,
       appointmentTime,
-      totalAmount: treatment.price,
       specialRequests,
       status: 'confirmed',
       paymentMethod: paymentMethod || 'cash',
@@ -262,7 +259,7 @@ router.post('/', protect, [
     await booking.save();
 
     // Populate the booking with treatment details for response
-    await booking.populate('treatment', 'name category image price priceDisplay duration durationDisplay');
+    await booking.populate('treatment', 'name category image duration durationDisplay');
 
     // Send booking confirmation email (non-blocking if it fails)
     try {
@@ -365,7 +362,7 @@ router.patch('/:id/status', protect, [
 // Reschedule booking
 router.patch('/:id/reschedule', protect, [
   body('appointmentDate').isISO8601().withMessage('Please provide a valid appointment date'),
-  body('appointmentTime').matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).withMessage('Please provide a valid appointment time (HH:MM format)')
+  body('appointmentTime').isIn(['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00']).withMessage('Please select a valid appointment time slot')
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -520,7 +517,7 @@ router.patch('/:id/feedback', protect, [
 
 // Get availability for multiple dates (calendar view)
 router.get('/availability/calendar/:year/:month', [
-  query('location').isIn(['Jubilee Hills', 'Kokapet', 'Kondapur']).withMessage('Please select a valid location'),
+  query('location').isIn(['Jubilee Hills', 'Financial District', 'Kondapur']).withMessage('Please select a valid location'),
   query('treatmentId').optional().isMongoId().withMessage('Valid treatment ID is required')
 ], async (req, res) => {
   try {
@@ -634,7 +631,7 @@ router.get('/availability/calendar/:year/:month', [
 
 // Get available time slots for a specific date and location
 router.get('/availability/:date', [
-  query('location').isIn(['Jubilee Hills', 'Kokapet', 'Kondapur']).withMessage('Please select a valid location'),
+  query('location').isIn(['Jubilee Hills', 'Financial District', 'Kondapur']).withMessage('Please select a valid location'),
   query('treatmentId').optional().isMongoId().withMessage('Valid treatment ID is required')
 ], async (req, res) => {
   try {
@@ -904,13 +901,12 @@ router.get('/:id/slip', protect, async (req, res) => {
       appointmentDate: booking.appointmentDate.toISOString().split('T')[0],
       appointmentTime: booking.appointmentTime,
       location: booking.location,
-      totalAmount: booking.totalAmount,
       status: booking.status,
       bookedAt: booking.createdAt,
       specialRequests: booking.specialRequests || 'None',
       paymentMethod: booking.paymentMethod,
       clinicInfo: {
-        name: 'Zennara Wellness Center',
+        name: 'Zennara Clinic',
         address: `${booking.location}, India`,
         phone: '+91-9999999999',
         email: 'info@zennara.com',
@@ -1190,7 +1186,7 @@ router.post('/:id/checkout', protect, [
 // Get all bookings for admin (for admin panel)
 router.get('/admin/all-bookings', protect, [
   query('status').optional().isIn(['confirmed', 'in-progress', 'completed', 'cancelled', 'rescheduled', 'no-show']),
-  query('location').optional().isIn(['Jubilee Hills', 'Kokapet', 'Kondapur']),
+  query('location').optional().isIn(['Jubilee Hills', 'Financial District', 'Kondapur']),
   query('date').optional().isISO8601(),
   query('limit').optional().isInt({ min: 1, max: 100 }),
   query('page').optional().isInt({ min: 1 })
@@ -1801,7 +1797,7 @@ router.get('/admin/dashboard-stats', async (req, res) => {
       {
         $group: {
           _id: null,
-          totalRevenue: { $sum: '$totalAmount' },
+          totalRevenue: { $sum: 0 },
           count: { $sum: 1 }
         }
       }
@@ -1818,7 +1814,7 @@ router.get('/admin/dashboard-stats', async (req, res) => {
         $group: {
           _id: '$treatmentDetails.name',
           count: { $sum: 1 },
-          revenue: { $sum: '$totalAmount' }
+          revenue: { $sum: 0 }
         }
       },
       { $sort: { count: -1 } },

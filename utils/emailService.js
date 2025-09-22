@@ -243,7 +243,7 @@ const sendCheckoutOTPEmail = async (email, otp, booking) => {
         
         <div style="background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; border-top: 1px solid #e9ecef;">
           <p style="margin: 0; font-size: 12px; color: #6c757d;">
-            Zennara Wellness Center | ${booking.location}<br>
+            Zennara Clinic | ${booking.location}<br>
             Phone: +91-9999999999 | Email: info@zennara.com<br>
             This is an automated message. Please do not reply to this email.
           </p>
@@ -360,7 +360,7 @@ const sendBookingConfirmationEmail = async (email, booking) => {
         
         <div style="background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; border-top: 1px solid #e9ecef;">
           <p style="margin: 0; font-size: 12px; color: #6c757d;">
-            Zennara Wellness Center | ${booking.location}<br>
+            Zennara Clinic | ${booking.location}<br>
             Phone: +91-9999999999 | Email: info@zennara.com<br>
             This is an automated message. Please do not reply to this email.
           </p>
@@ -491,7 +491,7 @@ const send12HourReminderEmail = async (email, booking) => {
         
         <div style="background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; border-top: 1px solid #e9ecef;">
           <p style="margin: 0; font-size: 12px; color: #6c757d;">
-            Zennara Wellness Center | ${booking.location}<br>
+            Zennara Clinic | ${booking.location}<br>
             Phone: +91-9999999999 | Email: info@zennara.com<br>
             This is an automated reminder. Please do not reply to this email.
           </p>
@@ -600,7 +600,7 @@ const send1HourReminderEmail = async (email, booking) => {
         
         <div style="background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; border-top: 1px solid #e9ecef;">
           <p style="margin: 0; font-size: 12px; color: #6c757d;">
-            Zennara Wellness Center | ${booking.location}<br>
+            Zennara Clinic | ${booking.location}<br>
             Phone: +91-9999999999 | Email: info@zennara.com<br>
             This is an automated reminder. Please do not reply to this email.
           </p>
@@ -713,7 +713,7 @@ const sendAppointmentCancelledEmail = async (email, booking) => {
         
         <div style="background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; border-top: 1px solid #e9ecef;">
           <p style="margin: 0; font-size: 12px; color: #6c757d;">
-            Zennara Wellness Center | ${booking.location}<br>
+            Zennara Clinic | ${booking.location}<br>
             Phone: +91-9999999999 | Email: info@zennara.com<br>
             This is an automated message. Please do not reply to this email.
           </p>
@@ -846,7 +846,7 @@ const sendAppointmentRescheduledEmail = async (email, oldBooking, newBooking) =>
         
         <div style="background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; border-top: 1px solid #e9ecef;">
           <p style="margin: 0; font-size: 12px; color: #6c757d;">
-            Zennara Wellness Center | ${newBooking.location}<br>
+            Zennara Clinic | ${newBooking.location}<br>
             Phone: +91-9999999999 | Email: info@zennara.com<br>
             This is an automated message. Please do not reply to this email.
           </p>

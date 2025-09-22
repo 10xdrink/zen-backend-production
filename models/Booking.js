@@ -37,8 +37,6 @@ const bookingSchema = new mongoose.Schema({
   treatmentDetails: {
     name: String,
     category: String,
-    price: Number,
-    priceDisplay: String,
     duration: Number,
     durationDisplay: String
   },
@@ -47,7 +45,7 @@ const bookingSchema = new mongoose.Schema({
   location: {
     type: String,
     required: [true, 'Location is required'],
-    enum: ['Jubilee Hills', 'Kokapet', 'Kondapur']
+    enum: ['Jubilee Hills', 'Financial District', 'Kondapur']
   },
   appointmentDate: {
     type: Date,
@@ -75,10 +73,6 @@ const bookingSchema = new mongoose.Schema({
     type: String,
     enum: ['cash', 'card', 'upi', 'wallet'],
     default: 'cash'
-  },
-  totalAmount: {
-    type: Number,
-    required: [true, 'Total amount is required']
   },
   paymentUpdatedAt: Date,
   fullyProcessed: {

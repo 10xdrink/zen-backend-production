@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema({
   location: {
     type: String,
     required: [true, 'Location is required'],
-    enum: ['Jubilee Hills', 'Kokapet', 'Kondapur']
+    enum: ['Jubilee Hills', 'Financial District', 'Kondapur']
   },
   profilePhoto: {
     type: String,

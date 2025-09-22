@@ -13,7 +13,7 @@ router.put('/profile', protect, [
   body('phoneNumber').optional().matches(/^[\+]?[1-9][\d]{0,15}$/).withMessage('Please provide a valid phone number'),
   body('dateOfBirth').optional().isISO8601().withMessage('Please provide a valid date of birth'),
   body('gender').optional().isIn(['Male', 'Female', 'Other']).withMessage('Gender must be Male, Female, or Other'),
-  body('location').optional().isIn(['Jubilee Hills', 'Kokapet', 'Kondapur']).withMessage('Please select a valid location')
+  body('location').optional().isIn(['Jubilee Hills', 'Financial District', 'Kondapur']).withMessage('Please select a valid location')
 ], async (req, res) => {
   try {
     const errors = validationResult(req);

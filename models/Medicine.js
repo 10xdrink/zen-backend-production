@@ -119,7 +119,7 @@ const medicineSchema = new mongoose.Schema({
   },
   location: {
     type: String,
-    enum: ['Jubilee Hills', 'Kokapet', 'Kondapur', 'All'],
+    enum: ['Jubilee Hills', 'Financial District', 'Kondapur', 'All'],
     default: 'All'
   },
   expiryDate: {
