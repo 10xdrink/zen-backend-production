@@ -157,20 +157,17 @@ router.get('/:id', protect, async (req, res) => {
 router.post('/', protect, [
   body('treatmentId').isMongoId().withMessage('Valid treatment ID is required'),
   body('personalDetails.fullName').trim().isLength({ min: 2, max: 50 }).withMessage('Full name must be between 2-50 characters'),
-  body('personalDetails.mobileNumber').matches(/^[\+]?[1-9][\d]{8,15}$/).withMessage('Please provide a valid mobile number'),
+  body('personalDetails.mobileNumber').matches(/^[\+]?[1-9][\d]{0,15}$/).withMessage('Please provide a valid mobile number'),
   body('personalDetails.email').isEmail().normalizeEmail().withMessage('Please provide a valid email'),
   body('location').isIn(['Jubilee Hills', 'Financial District', 'Kondapur']).withMessage('Please select a valid location'),
-  body('appointmentDate').matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Please provide a valid appointment date'),
+  body('appointmentDate').isISO8601().withMessage('Please provide a valid appointment date'),
   body('appointmentTime').isIn(['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00']).withMessage('Please select a valid appointment time slot'),
-  body('specialRequests').optional().isLength({ max: 500 }).withMessage('Special requests cannot exceed 500 characters')
+  body('specialRequests').optional().isLength({ max: 500 }).withMessage('Special requests cannot exceed 500 characters'),
+  body('paymentMethod').optional().isIn(['cash', 'card', 'upi', 'wallet']).withMessage('Please provide a valid payment method')
 ], async (req, res) => {
   try {
-    // Debug: Log the received request body
-    console.log('BACKEND - Received booking request body:', JSON.stringify(req.body, null, 2));
-    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      console.log('BACKEND - Validation errors:', JSON.stringify(errors.array(), null, 2));
       return res.status(400).json({
         success: false,
         message: 'Validation failed',
