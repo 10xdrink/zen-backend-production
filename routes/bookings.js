@@ -165,8 +165,12 @@ router.post('/', protect, [
   body('specialRequests').optional().isLength({ max: 500 }).withMessage('Special requests cannot exceed 500 characters')
 ], async (req, res) => {
   try {
+    // Debug: Log the received request body
+    console.log('BACKEND - Received booking request body:', JSON.stringify(req.body, null, 2));
+    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('BACKEND - Validation errors:', JSON.stringify(errors.array(), null, 2));
       return res.status(400).json({
         success: false,
         message: 'Validation failed',
