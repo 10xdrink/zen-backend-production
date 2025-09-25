@@ -58,7 +58,7 @@ router.post('/submit', protect, [
 
     // Create support request
     const supportRequest = new Support({
-      user: req.user.id,
+      user: req.user.userId,
       name,
       email,
       phone: phone || '',
