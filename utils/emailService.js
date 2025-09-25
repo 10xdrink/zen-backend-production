@@ -22,7 +22,7 @@ const sendOTPEmail = async (email, otp, fullName) => {
       </head>
       <body style="font-family: 'Poppins', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: linear-gradient(135deg, #4ade80, #156450, #065f46); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-          <h1 style="color: white; margin: 0; font-size: 28px; font-weight: bold;">ZENNARA</h1>
+          <img src="https://res.cloudinary.com/dgcpuirdo/image/upload/v1747888804/zennara_logo_white_1_k3ohat.png" alt="Zennara Logo" style="height: 40px; margin-bottom: 10px;" />
           <p style="color: white; margin: 5px 0 0 0; font-size: 14px; opacity: 0.9;">Your Beauty Transformation Journey</p>
         </div>
         
@@ -117,7 +117,7 @@ const sendWelcomeEmail = async (email, fullName) => {
       </head>
       <body style="font-family: 'Poppins', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: linear-gradient(135deg, #4ade80, #156450, #065f46); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-          <h1 style="color: white; margin: 0; font-size: 28px; font-weight: bold;">ZENNARA</h1>
+          <img src="https://res.cloudinary.com/dgcpuirdo/image/upload/v1747888804/zennara_logo_white_1_k3ohat.png" alt="Zennara Logo" style="height: 40px; margin-bottom: 10px;" />
           <p style="color: white; margin: 5px 0 0 0; font-size: 14px; opacity: 0.9;">Your Beauty Transformation Journey</p>
         </div>
         
@@ -196,7 +196,7 @@ const sendCheckoutOTPEmail = async (email, otp, booking) => {
       </head>
       <body style="font-family: 'Poppins', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: linear-gradient(135deg, #4ade80, #156450, #065f46); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-          <h1 style="color: white; margin: 0; font-size: 28px; font-weight: bold;">ZENNARA</h1>
+          <img src="https://res.cloudinary.com/dgcpuirdo/image/upload/v1747888804/zennara_logo_white_1_k3ohat.png" alt="Zennara Logo" style="height: 40px; margin-bottom: 10px;" />
           <p style="color: white; margin: 5px 0 0 0; font-size: 14px; opacity: 0.9;">Your Beauty Transformation Journey</p>
         </div>
         
@@ -295,7 +295,7 @@ const sendBookingConfirmationEmail = async (email, booking) => {
       </head>
       <body style="font-family: 'Poppins', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: linear-gradient(135deg, #4ade80, #156450, #065f46); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-          <h1 style="color: white; margin: 0; font-size: 28px; font-weight: bold;">ZENNARA</h1>
+          <img src="https://res.cloudinary.com/dgcpuirdo/image/upload/v1747888804/zennara_logo_white_1_k3ohat.png" alt="Zennara Logo" style="height: 40px; margin-bottom: 10px;" />
           <p style="color: white; margin: 5px 0 0 0; font-size: 14px; opacity: 0.9;">Your Beauty Transformation Journey</p>
         </div>
         
@@ -434,7 +434,7 @@ const send12HourReminderEmail = async (email, booking) => {
       </head>
       <body style="font-family: 'Poppins', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: linear-gradient(135deg, #4ade80, #156450, #065f46); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-          <h1 style="color: white; margin: 0; font-size: 28px; font-weight: bold;">ZENNARA</h1>
+          <img src="https://res.cloudinary.com/dgcpuirdo/image/upload/v1747888804/zennara_logo_white_1_k3ohat.png" alt="Zennara Logo" style="height: 40px; margin-bottom: 10px;" />
           <p style="color: white; margin: 5px 0 0 0; font-size: 14px; opacity: 0.9;">Your Beauty Transformation Journey</p>
         </div>
         
@@ -543,7 +543,7 @@ const send1HourReminderEmail = async (email, booking) => {
       </head>
       <body style="font-family: 'Poppins', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: linear-gradient(135deg, #4ade80, #156450, #065f46); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-          <h1 style="color: white; margin: 0; font-size: 28px; font-weight: bold;">ZENNARA</h1>
+          <img src="https://res.cloudinary.com/dgcpuirdo/image/upload/v1747888804/zennara_logo_white_1_k3ohat.png" alt="Zennara Logo" style="height: 40px; margin-bottom: 10px;" />
           <p style="color: white; margin: 5px 0 0 0; font-size: 14px; opacity: 0.9;">Your Beauty Transformation Journey</p>
         </div>
         
@@ -652,7 +652,7 @@ const sendAppointmentCancelledEmail = async (email, booking) => {
       </head>
       <body style="font-family: 'Poppins', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: linear-gradient(135deg, #4ade80, #156450, #065f46); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-          <h1 style="color: white; margin: 0; font-size: 28px; font-weight: bold;">ZENNARA</h1>
+          <img src="https://res.cloudinary.com/dgcpuirdo/image/upload/v1747888804/zennara_logo_white_1_k3ohat.png" alt="Zennara Logo" style="height: 40px; margin-bottom: 10px;" />
           <p style="color: white; margin: 5px 0 0 0; font-size: 14px; opacity: 0.9;">Your Beauty Transformation Journey</p>
         </div>
         
@@ -765,7 +765,7 @@ const sendAppointmentRescheduledEmail = async (email, oldBooking, newBooking) =>
       </head>
       <body style="font-family: 'Poppins', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: linear-gradient(135deg, #4ade80, #156450, #065f46); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-          <h1 style="color: white; margin: 0; font-size: 28px; font-weight: bold;">ZENNARA</h1>
+          <img src="https://res.cloudinary.com/dgcpuirdo/image/upload/v1747888804/zennara_logo_white_1_k3ohat.png" alt="Zennara Logo" style="height: 40px; margin-bottom: 10px;" />
           <p style="color: white; margin: 5px 0 0 0; font-size: 14px; opacity: 0.9;">Your Beauty Transformation Journey</p>
         </div>
         
@@ -909,7 +909,7 @@ const sendAdminOTPEmail = async (email, otp) => {
             </head>
             <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
               <div style="background: linear-gradient(135deg, #156450 0%, #1a7a5e 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-                <h1 style="color: white; margin: 0; font-size: 28px;">Zennara Admin</h1>
+                <img src="https://res.cloudinary.com/dgcpuirdo/image/upload/v1747888804/zennara_logo_white_1_k3ohat.png" alt="Zennara Logo" style="height: 40px; margin-bottom: 10px;" />
                 <p style="color: #e8f5f0; margin: 10px 0 0 0; font-size: 16px;">Admin Panel Access</p>
               </div>
               
