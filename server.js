@@ -14,6 +14,7 @@ const bookingRoutes = require('./routes/bookings');
 const medicineRoutes = require('./routes/medicines');
 const medicineOrderRoutes = require('./routes/medicine-orders');
 const membershipRoutes = require('./routes/membership');
+const supportRoutes = require('./routes/support');
 
 const app = express();
 
@@ -59,6 +60,7 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/medicines', medicineRoutes);
 app.use('/api/medicine-orders', medicineOrderRoutes);
 app.use('/api/membership', membershipRoutes);
+app.use('/api/support', supportRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

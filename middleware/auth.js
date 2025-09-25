@@ -73,7 +73,11 @@ const restrictTo = (...roles) => {
   };
 };
 
+// Admin protection middleware (combines protect + admin role check)
+const adminProtect = [protect, restrictTo('admin')];
+
 module.exports = {
   protect,
-  restrictTo
+  restrictTo,
+  adminProtect
 };
