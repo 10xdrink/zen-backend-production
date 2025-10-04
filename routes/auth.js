@@ -143,6 +143,7 @@ router.post('/verify-otp', [
           fullName: user.fullName,
           phoneNumber: user.phoneNumber,
           location: user.location,
+          profilePhoto: user.profilePhoto,
           isEmailVerified: user.isEmailVerified,
           isPhoneVerified: user.isPhoneVerified,
           hasZenMembership: user.hasZenMembership || false
